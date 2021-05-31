@@ -18,14 +18,22 @@ def addVideo():
     else:
         msgbox.showwarning('경고', '올바른 링크가 아닙니다.')
 
-def deleteSelectedVideo():
+    linkEntry.delete(0, END)
+
+def EnterAddVideo(event):
+    addVideo()
+
+def deleteSelectedLink():
     if len(linkList.curselection()) == 0:
         msgbox.showwarning('경고', '선택한 링크가 없습니다.')
     else:
         for index in reversed(linkList.curselection()):
             linkList.delete(index)
 
-def deleteAllVideo():
+def BackSpaceDeleteSelectedLink(event):
+    deleteSelectedLink()
+
+def deleteAllLink():
     if linkList.size() == 0:
         msgbox.showwarning('경고', '리스트에 링크가 없습니다.')
     else:
@@ -47,19 +55,21 @@ def extraction():
     pass
 
 
+
 linkFrmae = LabelFrame(window, text='링크')
 linkFrmae.pack(fill='x', padx=5, pady=5, ipady=5)
 
 linkEntry = Entry(linkFrmae)
 linkEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=5)
+linkEntry.bind('<Return>', EnterAddVideo)
 
 addVideoBtn = Button(linkFrmae, text='링크 추가', width=10, command=addVideo)
 addVideoBtn.pack(side='right', padx=5, pady=5)
 
 
+
 linkOperationFrame = Frame(window)
 linkOperationFrame.pack(fill='both', padx=5, pady=5)
-
 
 listFrame = Frame(linkOperationFrame)
 listFrame.pack(side='left', fill='both', expand=True)
@@ -69,16 +79,17 @@ scrollbar.pack(side='right', fill='y')
 
 linkList = Listbox(listFrame, selectmode='extended', height=10, yscrollcommand=scrollbar.set)
 linkList.pack(side='left', fill='x', expand=True)
+linkList.bind('<BackSpace>', BackSpaceDeleteSelectedLink)
 scrollbar.config(command=linkList.yview)
-
 
 deleteBtnFrame = Frame(linkOperationFrame)
 deleteBtnFrame.pack(side='right')
 
-deleteSelectionBtn = Button(deleteBtnFrame, text='선택 삭제', width=10, command=deleteSelectedVideo)
+deleteSelectionBtn = Button(deleteBtnFrame, text='선택 삭제', width=10, command=deleteSelectedLink)
 deleteSelectionBtn.pack(padx=5, pady=18)
-deleteAllBtn = Button(deleteBtnFrame, text='전체 삭제', width=10, command=deleteAllVideo)
+deleteAllBtn = Button(deleteBtnFrame, text='전체 삭제', width=10, command=deleteAllLink)
 deleteAllBtn.pack(padx=5, pady=18)
+
 
 
 pathFrame = LabelFrame(window, text='저장경로')
@@ -91,6 +102,7 @@ pathBtn = Button(pathFrame, text='찾아보기', width=10, command=browsePath)
 pathBtn.pack(side='right', padx=5, pady=5)
 
 
+
 optionFrame = LabelFrame(window, text='옵션 설정')
 optionFrame.pack(side='top', fill='x', padx=5, pady=5, ipady=4)
 
@@ -101,6 +113,7 @@ audioOption = ['best', 'aac', 'flac', 'mp3', 'm4a', 'opus', 'vorbis', 'wav']
 audioCmb = ttk.Combobox(optionFrame, state='readonly', values=audioOption, width=10)
 audioCmb.current(0)
 audioCmb.pack(fill='x', padx=5, pady=5)
+
 
 
 runFrame = Frame(window)

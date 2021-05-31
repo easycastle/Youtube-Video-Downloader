@@ -54,15 +54,18 @@ pathBtn = Button(pathFrame, text='찾아보기', width=10, command=browsePath)
 pathBtn.pack(side='right', padx=5, pady=5)
 
 
-formatFrame = LabelFrame(window, text='파일 형식')
-formatFrame.pack(side='left', padx=5, pady=5)
+optionFrame = LabelFrame(window, text='옵션 설정')
+optionFrame.pack(side='top', fill='x', padx=5, pady=5, ipady=4)
 
-formatVar = IntVar()
-MP3_Rad = Radiobutton(formatFrame, text='MP3', value=3, variable=formatVar)
-MP4_Rad = Radiobutton(formatFrame, text='MP4', value=4, variable=formatVar)
-MP3_Rad.select()
-MP3_Rad.pack(side='left')
-MP4_Rad.pack(side='left')
+audioLabel = Label(optionFrame, text='음질')
+audioLabel.pack(side='left', padx=5, pady=5)
+
+audioOption = ['best', 'aac', 'flac', 'mp3', 'm4a', 'opus', 'vorbis', 'wav']
+audioCmb = ttk.Combobox(optionFrame, state='readonly', values=audioOption, width=10)
+audioCmb.current(0)
+audioCmb.pack(fill='x', padx=5, pady=5)
+
+
 
 
 runFrame = Frame(window)

@@ -10,14 +10,29 @@ window.resizable(False, False)
 
 def addVideo():
     link = linkEntry.get()
-    linkList.insert(END, link)
+
+    if link == '':
+        msgbox.showwarning('경고', '링크를 작성하지 않았습니다.')
+    elif 'https://www.youtube.com/watch?v=' in link and link != 'https://www.youtube.com/watch?v=':
+        linkList.insert(END, link)
+    else:
+        msgbox.showwarning('경고', '올바른 링크가 아닙니다.')
 
 def deleteSelectedVideo():
-    for index in reversed(linkList.curselection()):
-        linkList.delete(index)
+    if len(linkList.curselection()) == 0:
+        msgbox.showwarning('경고', '선택한 링크가 없습니다.')
+    else:
+        for index in reversed(linkList.curselection()):
+            linkList.delete(index)
 
 def deleteAllVideo():
-    linkList.delete(0, END)
+    if linkList.size() == 0:
+        msgbox.showwarning('경고', '리스트에 링크가 없습니다.')
+    else:
+        response = msgbox.askyesno('경고', '정말로 전체 삭제를 하시겠습니까?')
+
+        if response == 1:
+            linkList.delete(0, END)
 
 def browsePath():
     folder_selected = filedialog.askdirectory()

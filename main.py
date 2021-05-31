@@ -3,6 +3,8 @@ import tkinter.messagebox as msgbox
 from tkinter import *
 from tkinter import filedialog
 
+import youtube_dl as ytdl
+
 window = Tk()
 window.title('youtube_video_downloader')
 window.geometry('640x480')
@@ -14,7 +16,10 @@ def addVideo():
     if link == '':
         msgbox.showwarning('경고', '링크를 작성하지 않았습니다.')
     elif 'https://www.youtube.com/watch?v=' in link and link != 'https://www.youtube.com/watch?v=':
-        linkList.insert(END, link)
+        if link in linkList.get(0, END):
+            msgbox.showwarning('경고', '이미 대기 중인 링크입니다.')
+        else:
+            linkList.insert(END, link)
     else:
         msgbox.showwarning('경고', '올바른 링크가 아닙니다.')
 
@@ -74,13 +79,17 @@ linkOperationFrame.pack(fill='both', padx=5, pady=5)
 listFrame = Frame(linkOperationFrame)
 listFrame.pack(side='left', fill='both', expand=True)
 
-scrollbar = Scrollbar(listFrame)
-scrollbar.pack(side='right', fill='y')
+xScrollbar = Scrollbar(listFrame, orient=HORIZONTAL)
+yScrollbar = Scrollbar(listFrame)
+xScrollbar.pack(side='bottom', fill='x')
+yScrollbar.pack(side='right', fill='y')
 
-linkList = Listbox(listFrame, selectmode='extended', height=10, yscrollcommand=scrollbar.set)
+linkList = Listbox(listFrame, selectmode='extended', height=10, xscrollcommand=xScrollbar.set, yscrollcommand=yScrollbar.set)
 linkList.pack(side='left', fill='x', expand=True)
 linkList.bind('<BackSpace>', BackSpaceDeleteSelectedLink)
-scrollbar.config(command=linkList.yview)
+xScrollbar.config(command=linkList.xview)
+yScrollbar.config(command=linkList.yview)
+
 
 deleteBtnFrame = Frame(linkOperationFrame)
 deleteBtnFrame.pack(side='right')

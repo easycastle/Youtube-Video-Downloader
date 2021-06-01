@@ -57,25 +57,36 @@ def browsePath():
     pathEntry.delete(0, END)
     pathEntry.insert(0, folder_selected)
 
-def extraction():
+def extract():
     ytdlOption = {
         'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
         'format' : formatCmb.get()
     }
 
-    with youtube_dl.YoutubeDL(ytdlOption) as ytdl:
-        ytdl.download(linkList.get(0, END))
+    size = linkList.size()
 
-    linkList.delete(0, END)
+    for index in range(linkList.size()):
+        try:
+            with youtube_dl.YoutubeDL(ytdlOption) as ytdl:
+                ytdl.download([linkList.get(index)])
+
+            linkList.delete(0)
+
+            progress = (index + 1) / size * 100
+            progressVar.set(progress)
+            progressBar.update()
+        except:
+            continue
+
     msgbox.showinfo('알림', '모든 영상을 추출했습니다.')
 
 
 
 linkFrmae = LabelFrame(window, text='링크')
-linkFrmae.pack(fill='x', padx=5, pady=5, ipady=5)
+linkFrmae.pack(fill='x', padx=5, pady=4)
 
 linkEntry = Entry(linkFrmae)
-linkEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=5)
+linkEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=3)
 linkEntry.bind('<Return>', EnterAddVideo)
 
 addVideoBtn = Button(linkFrmae, text='링크 추가', width=10, command=addVideo)
@@ -84,7 +95,7 @@ addVideoBtn.pack(side='right', padx=5, pady=5)
 
 
 linkOperationFrame = Frame(window)
-linkOperationFrame.pack(fill='both', padx=5, pady=5)
+linkOperationFrame.pack(fill='both', padx=5, pady=4)
 
 listFrame = Frame(linkOperationFrame)
 listFrame.pack(side='left', fill='both', expand=True)
@@ -112,10 +123,10 @@ deleteAllBtn.pack(padx=5, pady=18)
 
 
 pathFrame = LabelFrame(window, text='저장경로')
-pathFrame.pack(fill='x', padx=5, pady=5, ipady=5)
+pathFrame.pack(fill='x', padx=5, pady=4)
 
 pathEntry = Entry(pathFrame)
-pathEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=4)
+pathEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=3)
 
 pathBtn = Button(pathFrame, text='찾아보기', width=10, command=browsePath)
 pathBtn.pack(side='right', padx=5, pady=5)
@@ -123,7 +134,7 @@ pathBtn.pack(side='right', padx=5, pady=5)
 
 
 optionFrame = LabelFrame(window, text='옵션 설정')
-optionFrame.pack(side='top', fill='x', padx=5, pady=5, ipady=4)
+optionFrame.pack(side='top', fill='x', padx=5, pady=4)
 
 formatLabel = Label(optionFrame, text='포맷')
 formatLabel.pack(side='left', padx=5, pady=5)
@@ -134,6 +145,14 @@ formatCmb.current(0)
 formatCmb.pack(fill='x', padx=5, pady=5)
 
 
+progressFrame = LabelFrame(text='진행 상황')
+progressFrame.pack(side='top', fill='x', padx=5, pady=4)
+
+progressVar = DoubleVar()
+progressBar = ttk.Progressbar(progressFrame, maximum=100, variable=progressVar)
+progressBar.pack(fill='x', padx=5, pady=5)
+
+
 
 runFrame = Frame(window)
 runFrame.pack(side='right')
@@ -141,7 +160,7 @@ runFrame.pack(side='right')
 startBtn = Button(runFrame, text='닫기', width=12, padx=5, pady=5, command=window.quit)
 startBtn.pack(side='right', padx=5, pady=5)
 
-extractionBtn = Button(runFrame, text='추출', width=12, padx=5, pady=5, command=extraction)
+extractionBtn = Button(runFrame, text='추출', width=12, padx=5, pady=5, command=extract)
 extractionBtn.pack(side='right', padx=5, pady=5)
 
 window.mainloop()

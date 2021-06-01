@@ -3,7 +3,8 @@ import tkinter.messagebox as msgbox
 from tkinter import *
 from tkinter import filedialog
 
-import youtube_dl as ytdl
+import youtube_dl
+import os
 
 window = Tk()
 window.title('youtube_video_downloader')
@@ -57,7 +58,16 @@ def browsePath():
     pathEntry.insert(0, folder_selected)
 
 def extraction():
-    pass
+    ytdlOption = {
+        'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
+        'format' : formatCmb.get()
+    }
+
+    with youtube_dl.YoutubeDL(ytdlOption) as ytdl:
+        ytdl.download(linkList.get(0, END))
+
+    linkList.delete(0, END)
+    msgbox.showinfo('알림', '모든 영상을 추출했습니다.')
 
 
 
@@ -115,13 +125,13 @@ pathBtn.pack(side='right', padx=5, pady=5)
 optionFrame = LabelFrame(window, text='옵션 설정')
 optionFrame.pack(side='top', fill='x', padx=5, pady=5, ipady=4)
 
-audioLabel = Label(optionFrame, text='음질')
-audioLabel.pack(side='left', padx=5, pady=5)
+formatLabel = Label(optionFrame, text='포맷')
+formatLabel.pack(side='left', padx=5, pady=5)
 
-audioOption = ['best', 'aac', 'flac', 'mp3', 'm4a', 'opus', 'vorbis', 'wav']
-audioCmb = ttk.Combobox(optionFrame, state='readonly', values=audioOption, width=10)
-audioCmb.current(0)
-audioCmb.pack(fill='x', padx=5, pady=5)
+formatOption = ['mp4', 'm4a', 'webm', 'best', 'worst', 'bestvideo', 'worstvideo', 'bestaudio', 'worstaudio']
+formatCmb = ttk.Combobox(optionFrame, state='readonly', values=formatOption, width=10)
+formatCmb.current(0)
+formatCmb.pack(fill='x', padx=5, pady=5)
 
 
 

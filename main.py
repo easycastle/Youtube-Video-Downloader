@@ -41,7 +41,7 @@ def BackSpaceDeleteSelectedLink(event):
 
 def deleteAllLink():
     if linkList.size() == 0:
-        msgbox.showwarning('경고', '리스트에 링크가 없습니다.')
+        msgbox.showwarning('경고', '링크를 입력하세요.')
     else:
         response = msgbox.askyesno('경고', '정말로 전체 삭제를 하시겠습니까?')
 
@@ -58,27 +58,33 @@ def browsePath():
     pathEntry.insert(0, folder_selected)
 
 def extract():
-    ytdlOption = {
-        'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
-        'format' : formatCmb.get()
-    }
+    if linkList.size() == 0:
+        msgbox.showwarning('경고', '링크를 입력하세요.')
+    elif pathEntry.get() == '':
+        msgbox.showwarning('경고', '저장 위치를 입력하세요.')
+    else:
+        ytdlOption = {
+            'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
+            'format' : formatCmb.get()
+        }
 
-    size = linkList.size()
+        size = linkList.size()
+        downloadCnt = 0
 
-    for index in range(linkList.size()):
-        try:
+        for video in linkList.get(0, END):
             with youtube_dl.YoutubeDL(ytdlOption) as ytdl:
-                ytdl.download([linkList.get(index)])
+                ytdl.download([video])
 
             linkList.delete(0)
+            downloadCnt += 1
 
-            progress = (index + 1) / size * 100
+            progress = (downloadCnt + 1) / size * 100
             progressVar.set(progress)
             progressBar.update()
-        except:
-            continue
 
-    msgbox.showinfo('알림', '모든 영상을 추출했습니다.')
+        msgbox.showinfo('알림', '모든 영상을 추출했습니다.')
+        progressVar.set(0)
+        progressBar.update()
 
 
 

@@ -94,6 +94,7 @@ linkFrmae.pack(fill='x', padx=5, pady=4)
 linkEntry = Entry(linkFrmae)
 linkEntry.pack(side='left', fill='x', expand=True, padx=5, pady=5, ipady=3)
 linkEntry.bind('<Return>', EnterAddVideo)
+linkEntry.focus()
 
 addVideoBtn = Button(linkFrmae, text='링크 추가', width=10, command=addVideo)
 addVideoBtn.pack(side='right', padx=5, pady=5)

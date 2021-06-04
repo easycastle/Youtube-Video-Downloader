@@ -65,7 +65,8 @@ def extract():
     else:
         ytdlOption = {
             'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
-            'format' : formatCmb.get()
+            'format' : formatCmb.get(), 
+            'writethumbnail' : True if thumbnailApplyCmb.get() == '적용' else False
         }
 
         size = linkList.size()
@@ -147,9 +148,19 @@ formatLabel = Label(optionFrame, text='포맷')
 formatLabel.pack(side='left', padx=5, pady=5)
 
 formatOption = ['mp4', 'm4a', 'webm', 'best', 'worst', 'bestvideo', 'worstvideo', 'bestaudio', 'worstaudio']
-formatCmb = ttk.Combobox(optionFrame, state='readonly', values=formatOption, width=10)
+formatCmb = ttk.Combobox(optionFrame, state='readonly', values=formatOption)
 formatCmb.current(0)
-formatCmb.pack(fill='x', padx=5, pady=5)
+formatCmb.pack(side='left', fill='x', expand=True, padx=5, pady=5)
+
+
+thumbnailApplyLabel = Label(optionFrame, text='썸네일')
+thumbnailApplyLabel.pack(side='left', padx=5, pady=5)
+
+thumbnailApplyOption = ['미적용', '적용']
+thumbnailApplyCmb = ttk.Combobox(optionFrame, state='readonly', values=thumbnailApplyOption)
+thumbnailApplyCmb.current(0)
+thumbnailApplyCmb.pack(side='left', fill='x', expand=True, padx=5, pady=5)
+
 
 
 progressFrame = LabelFrame(text='진행 상황')

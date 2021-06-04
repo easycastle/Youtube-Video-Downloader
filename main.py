@@ -16,7 +16,7 @@ def addVideo():
 
     if link == '':
         msgbox.showwarning('경고', '링크를 작성하지 않았습니다.')
-    elif 'https://www.youtube.com/watch?v=' in link and link != 'https://www.youtube.com/watch?v=':
+    elif 'https://www.youtube.com/' in link and link != 'https://www.youtube.com/':
         if link in linkList.get(0, END):
             msgbox.showwarning('경고', '이미 대기 중인 링크입니다.')
         else:
@@ -66,6 +66,7 @@ def extract():
         ytdlOption = {
             'outtmpl' : os.path.join(pathEntry.get(), '%(title)s.%(ext)s'), 
             'format' : formatCmb.get(), 
+            'ignoreerrors' : True, 
             'writethumbnail' : True if thumbnailApplyCmb.get() == '적용' else False
         }
 
